@@ -10,7 +10,9 @@ class CargarArchivoView(View):
     def post(self, request):
         nombre = request.POST.get('nombre')
         archivo = request.FILES.get('archivo')  # Obtener el archivo de la solicitud POST
+        # tipo_mimetype = archivo.content_type  # Obtener el tipo MIME
 
+        # nuevo_archivo = Archivo(nombre=nombre, archivo=archivo, tipo_mimetype=tipo_mimetype)
         nuevo_archivo = Archivo(nombre=nombre, archivo=archivo)
         nuevo_archivo.save()
 
@@ -18,7 +20,6 @@ class CargarArchivoView(View):
 
     def get(self, request):
         return render(request, 'cargar_archivo.html')
-
 
 
 
@@ -76,6 +77,9 @@ from django.views import generic
 
 class ArchivoListView(generic.ListView):
     model = Archivo
+
+class PresentacionListView(generic.ListView):
+    model = Presentacion
  
 class MostrarPresentacionView(View):
     def get(self, request, titulo):

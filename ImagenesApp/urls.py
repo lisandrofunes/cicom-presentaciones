@@ -10,7 +10,7 @@ from django.conf.urls.static import static
 urlpatterns = [ 
     #  path('', CargarArchivoView.as_view(), name='cargar_archivo'),
     path('archivo-create/', views.ArchivoCreate.as_view(), name='archivo-create'),
-    path('', views.index, name='index'),
+    path('', views.PresentacionListView.as_view(), name='index'),
     path('archivos/', views.ArchivoListView.as_view(), name='archivo-list'),
     path('presentacion-create/', views.CrearPresentacionView.as_view(), name='presentacion-create'),
     path('presentacion-vista/<str:titulo>', views.MostrarPresentacionView.as_view(), name='presentacion-vista'),

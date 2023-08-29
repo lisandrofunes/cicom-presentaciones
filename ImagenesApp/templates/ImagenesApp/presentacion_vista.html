@@ -16,8 +16,9 @@
         {% for archivo in archivos %}
         <div class="slide"
             style="position: absolute; display: flex; align-items: center; justify-content: center; width: 100%; height: 100vh; transform: scale(0.8); transition: opacity 0.5s ease, transform 0.5s ease; ">
+            <!-- VERIFICAR SI ES VIDEO O NO -->
             {% if archivo.es_video %}
-            <video controls style="width: 100%; height: 100%; object-fit: cover;">
+            <video controls style="height: 100%; object-fit: contain;">
                 <source src="{{ archivo.archivo.url }}" type="video/mp4">
                 Tu navegador no soporta el elemento de video.
             </video>
