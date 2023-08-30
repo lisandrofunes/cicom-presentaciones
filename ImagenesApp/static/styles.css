@@ -1,0 +1,40 @@
+html, body, :root {
+  width: 100%;
+  height: 100%;
+}
+
+#presentation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.file-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 500ms ease-out;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.file-wrapper > * {
+  height: 95%;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+div[data-state="hidden"] {
+  transform: scale(.8);
+  opacity: 0;
+}
+
+div[data-state="visible"] {
+  visibility: visible;
+  transform: scale(1);
+  opacity: 1;
+}
+

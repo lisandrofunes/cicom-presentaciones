@@ -1,59 +1,55 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 
 <head>
     <title>Presentación</title>
+    <script src="{% static 'app.js' %}"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-
+    <link href="{% static 'styles.css' %}" type="text/css" rel="stylesheet"/>
 </head>
 
-<body style="background-color: #000;">
-
-    <div id="presentation" style="position: relative;">
-        {% for archivo in archivos %}
-        <div class="slide"
-            style="position: absolute; display: flex; align-items: center; justify-content: center; width: 100%; height: 100vh; transform: scale(0.8); transition: opacity 0.5s ease, transform 0.5s ease; ">
-            <!-- VERIFICAR SI ES VIDEO O NO -->
-            {% if archivo.es_video %}
-            <video controls style="height: 100%; object-fit: contain;">
-                <source src="{{ archivo.archivo.url }}" type="video/mp4">
-                Tu navegador no soporta el elemento de video.
-            </video>
-            {% else %}
-            <img src="{{ archivo.archivo.url }}" class="img-fluid" alt="Imagen"
-                style="height: 100%; object-fit: contain;">
-            {% endif %}
-        </div>
-        {% endfor %}
+<body>
+    <div id="presentation">
     </div>
     <script>
-        const slides = document.querySelectorAll('.slide');
-        let currentSlide = 0;
+        const duracionGeneral = '{{ duracion }}' * 1000
+        function init() {
+            const presentacionDiv = document.getElementById('presentation')
+    
+            // Obtiene los archivos de la presentación desde el contexto de Django
+            // y devuelve un array con las rutas de cada uno 
+            const archivosUrlRaw = '{% for archivo in archivos %} {{ archivo.archivo.url }} {% endfor %}'
+                .split(' ').filter(archivo => archivo
+                )
 
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                if (i === index) {
-                    slide.style.opacity = '1';
-                    slide.style.transform = 'scale(1)';
-                } else {
-                    slide.style.opacity = '0';
-                    slide.style.transform = 'scale(0.8)';
+            // Mapea los archivos y los convierte en objetos con propiedad
+            // url, type (imagen o video), node (nodo HTML) y duracion (undefined para los videos)
+            // Aclaracion: Para poder obtener la duracion de los videos primero hay que cargarlos al document.querySelectorAll
+            // y esperar que se descargue el recurso, por eso la duracion es undefined.
+            const archivos = mapFiles(archivosUrlRaw, duracionGeneral)
+            
+            // Agrega los nodos al DOM
+            archivos.forEach(archivo => {
+                archivo.append(presentacionDiv)
+                if(archivo.type === 'video') {
+                    // Una vez que se carga el video en el DOM, se obtiene la duracion 
+                    // y se la asigna al objeto
+                    videoDuration(archivo.getFileTagChildren())
+                        .then( duracion => archivo.setDuration(duracion * 1000)
+                        )
                 }
-            });
+            })
+
+            return archivos
         }
 
+        // Se crean y se injectan todos los nodos HTML al DOM y se generan los objetos correspondientes a cada archivo
+        const archivos = init()
 
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % slides.length;
-            showSlide(currentSlide);
-        }
-
-        // Iniciar presentación
-        showSlide(currentSlide);
-        setInterval(nextSlide, {{ duracion }}* 1000); // Convertir segundos a milisegundos
+        slide(archivos, duracionGeneral)
     </script>
 
 </body>
