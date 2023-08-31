@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <div class="container" style="padding-top: 16px;">
     <h1>Lista de archivos</h1>
@@ -16,21 +16,28 @@
         </tr>
       </thead>
       <tbody>
-        {% for archivo in archivo_list %}
+        {% for archivo in object_list %}
         <tr>
           <td>{{ archivo.nombre }}</td>
-          <td><img src="{{ archivo.archivo.url }}" style="width: 30px; height: 30px;"/> 
-            {% comment %} <a href="{{ archivo.archivo.url }}" target="_blank">
-                <button>Abrir Imagen</button>
-            </a> {% endcomment %}
+          <td>
+            {% if archivo.es_video %}
+              <!-- Mostrar la imagen predeterminada como miniatura para videos -->
+             
+              <img src="{% static 'videopred.png' %}" style="width: 30px; height: 30px;"/>
+
+            {% else %}
+              <!-- Mostrar la miniatura de la imagen o cualquier otro tipo de archivo -->
+              <img src="{{ archivo.archivo.url }}" style="width: 30px; height: 30px;"/>
+            {% endif %}
           </td>
           <td>
-            <button type="button" class="btn btn-dark">Ver imagen</button>
+            <button type="button" class="btn btn-dark">Ver imagen/video</button>
             <button type="button" class="btn btn-warning">Editar</button>
             <button type="button" class="btn btn-danger">Eliminar</button>
           </td>
         </tr>
         {% endfor %}
+        
       </tbody>
     </table>
 
