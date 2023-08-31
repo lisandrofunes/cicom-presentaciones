@@ -1,0 +1,23 @@
+
+.page-links span.page-current {
+    display: inline-block;
+    width: 20px; /* Ancho deseado del círculo */
+    height: 20px; /* Altura deseada del círculo */
+    text-align: center;
+    line-height: 20px; /* Centra el contenido verticalmente en el círculo */
+    border-radius: 50%; /* Hace que el elemento sea circular */
+    background-color:  #e0a800; /* Color de fondo del círculo */
+    color: black; /* Color del texto dentro del círculo */
+    margin-right: 5px; /* Espacio entre los círculos */
+}
+
+.page-links span.current-page { display: inline-block;
+  width: 30px; /* Ancho aumentado del círculo */
+  height: 30px; /* Altura aumentada del círculo */
+  text-align: center;
+  line-height: 30px; /* Centra el contenido verticalmente en el círculo */
+  border-radius: 50%; /* Hace que el elemento sea circular */
+    background-color: #ffc107; /* Color de fondo diferente para la página actual */
+    color: #fff; /* Color del texto en la página actual */
+    margin-right: 5px; /* Espacio entre los círculos */
+}

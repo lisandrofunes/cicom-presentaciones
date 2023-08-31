@@ -37,21 +37,56 @@
 
 
     {% if is_paginated %}
-    <div class="pagination justify-content-center">
-      <span class="page-links" style="margin-bottom: 50px;margin-top: 25px;">
-          {% if page_obj.has_previous %}
-              <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}" class="btn btn-warning"  >Anterior</a>
-          {% endif %}
-          <span class="page-current">
-              Pagina {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-          </span>
-          {% if page_obj.has_next %}
-              <a href="{{ request.path }}?page={{ page_obj.next_page_number }}" class="btn btn-warning" >Siguiente</a>
-          {% endif %}
-      </span>
-  </div>
+   
   
+  <div class="pagination justify-content-center">
+    <span class="page-links" style="margin-bottom: 50px; margin-top: 25px;">
+        {% if page_obj.has_previous %}
+            <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}" class="btn btn-warning">Anterior</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a href="{{ request.path }}?page={{ page_obj.next_page_number }}" class="btn btn-warning">Siguiente</a>
+        {% endif %}
+        <!-- Inicio de la iteración para los números de página -->
+        {% for page_num in page_obj.paginator.page_range %}
+            {% if page_num == page_obj.number %}
+                <span class="page-current current-page">{{ page_num }}</span>
+            {% else %}
+                <span class="page-current">{{ page_num }}</span>
+            {% endif %}
+        {% endfor %}
+        <!-- Fin de la iteración -->
+        
+        
+    </span>
+</div>
+  
+    
 {% endif %}
     {% endif %}
   </div>
+  <style>
+    .page-links span.page-current {
+        display: inline-block;
+        width: 20px; /* Ancho deseado del círculo */
+        height: 20px; /* Altura deseada del círculo */
+        text-align: center;
+        line-height: 20px; /* Centra el contenido verticalmente en el círculo */
+        border-radius: 50%; /* Hace que el elemento sea circular */
+        background-color:  grey; /* Color de fondo del círculo */
+        color: black; /* Color del texto dentro del círculo */
+        margin-right: 5px; /* Espacio entre los círculos */
+    }
+
+    .page-links span.current-page { display: inline-block;
+      width: 25px; /* Ancho aumentado del círculo */
+      height: 25px; /* Altura aumentada del círculo */
+      text-align: center;
+      line-height: 25px; /* Centra el contenido verticalmente en el círculo */
+      border-radius: 50%; /* Hace que el elemento sea circular */
+        background-color: #ffc107; /* Color de fondo diferente para la página actual */
+        color: #fff; /* Color del texto en la página actual */
+        margin-right: 5px; /* Espacio entre los círculos */
+    }
+</style>
 {% endblock %}
