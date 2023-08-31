@@ -77,7 +77,8 @@ from django.views import generic
 
 class ArchivoListView(generic.ListView):
     model = Archivo
-
+    paginate_by = 10
+    
 class PresentacionListView(generic.ListView):
     model = Presentacion
  
