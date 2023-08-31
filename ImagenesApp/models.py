@@ -10,7 +10,10 @@ from django.forms import IntegerField
 class Archivo(models.Model):
     nombre = models.CharField(max_length=255)
     archivo = models.FileField(upload_to='archivos/')  # Ajusta la carpeta según tus necesidades
+   
     # tipo_mimetype = models.CharField(max_length=100)  # Campo para el tipo MIME
+
+
 
     def __str__(self):
         return self.nombre

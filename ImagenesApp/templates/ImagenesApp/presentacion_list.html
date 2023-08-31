@@ -5,13 +5,11 @@
     <h1>Lista de presentaciones</h1>
 
     {% if presentacion_list %}
-
     
     <table class="table table-hover">
       <thead>
         <tr>
           <th class="col-4" scope="col">Titulo</th>
-          <!-- <th class="col-2" scope="col">Archivos</th> -->
           <th class="col-2" scope="col">Tiempo</th>
           <th class="col-6" scope="col">Acciones</th>
         </tr>
@@ -21,13 +19,8 @@
         <tr>
           <td>{{ presentacion.titulo }}</td>
           <td>{{ presentacion.tiempo }}</td>
-          <!-- <td><img src="{{ presentacion.presentacion.url }}" style="width: 30px; height: 30px;"/> 
-            {% comment %} <a href="{{ presentacion.presentacion.url }}" target="_blank">
-                <button>Abrir Imagen</button>
-            </a> {% endcomment %}
-          </td> -->
           <td>
-            <button type="button" class="btn btn-dark">Ver Presentacion</button>
+            <button type="button" class="btn btn-dark" onclick="copyLink('{{ presentacion.titulo }}')">Ver Presentacion</button>
             <button type="button" class="btn btn-warning">Editar</button>
             <button type="button" class="btn btn-danger">Eliminar</button>
           </td>
@@ -36,10 +29,27 @@
       </tbody>
     </table>
 
-
-
     {% else %}
       <p>There are no books in the library.</p>
     {% endif %}
-  </div>
+</div>
+
+<script>
+function copyLink(title) {
+    var textArea = document.createElement("textarea");
+    textArea.value = 'http://127.0.0.1:8000/archivo/presentacion-vista/' + title;
+    document.body.appendChild(textArea);
+    textArea.select();
+    
+    try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'Enlace copiado: ' + textArea.value : 'No se pudo copiar el enlace';
+        alert(msg);
+    } catch (err) {
+        console.error('Error al copiar el enlace:', err);
+    }
+
+    document.body.removeChild(textArea);
+}
+</script>
 {% endblock %}
