@@ -14,7 +14,8 @@ urlpatterns = [
     path('archivos/', views.ArchivoListView.as_view(), name='archivo-list'),
     path('presentacion-create/', views.CrearPresentacionView.as_view(), name='presentacion-create'),
     path('presentacion-vista/<str:titulo>', views.MostrarPresentacionView.as_view(), name='presentacion-vista'),
-    
+    path('presentacion-delete/<int:pk>', views.PresentacionDeleteView.as_view(), name='presentacion-delete'),
+
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 # if settings.DEBUG:
 #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

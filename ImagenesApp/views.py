@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from .models import Archivo, DetallePresentacion, Presentacion
 from django.views import View
 from django.http import HttpResponse
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 
 
 class CargarArchivoView(View):
@@ -53,6 +53,10 @@ class CrearPresentacionView(View):
         return HttpResponse("Presentación creada exitosamente")
 
 
+class PresentacionDeleteView(DeleteView):
+    model = Presentacion
+    template_name = 'ImagenesApp/presentacion_delete.html'  
+    success_url = reverse_lazy('index')  
 
 def index(request):
     return render(request, 'ImagenesApp/index.html')

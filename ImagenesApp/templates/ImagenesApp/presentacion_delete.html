@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<body>
+    <h1>¿Estás seguro de que deseas eliminar esta presentación?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Eliminar">
+    </form>
+    <a href="{% url 'index' %}">Cancelar</a>
+</body>
+
+{% endblock %}
