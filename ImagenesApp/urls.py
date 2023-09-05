@@ -7,6 +7,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+app_name='imagenes'
 urlpatterns = [ 
     #  path('', CargarArchivoView.as_view(), name='cargar_archivo'),
     path('archivo-create/', views.ArchivoCreate.as_view(), name='archivo-create'),
@@ -14,6 +15,7 @@ urlpatterns = [
     path('archivos/', views.ArchivoListView.as_view(), name='archivo-list'),
     path('presentacion-create/', views.CrearPresentacionView.as_view(), name='presentacion-create'),
     path('presentacion-vista/<str:titulo>', views.MostrarPresentacionView.as_view(), name='presentacion-vista'),
+    path('<int:pk>/delete', views.deleteArchivo, name='delete'),
     
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 # if settings.DEBUG:

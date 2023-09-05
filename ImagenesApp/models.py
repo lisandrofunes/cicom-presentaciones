@@ -1,6 +1,6 @@
 from django.db import models
 from django.forms import IntegerField
-
+from django.urls import reverse 
 # class Archivo(models.Model):
 #     nombre = models.CharField(max_length=100)
 #     archivo = models.ImageField(upload_to='images/')
@@ -13,7 +13,7 @@ class Archivo(models.Model):
     es_video = models.BooleanField(default=False)
     # tipo_mimetype = models.CharField(max_length=100)  # Campo para el tipo MIME
 
-
+  
 
     def __str__(self):
         return self.nombre
