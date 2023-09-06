@@ -23,7 +23,7 @@
             <button type="button" class="btn btn-dark" onclick="copyLink('{{ presentacion.titulo }}')">Ver Presentacion</button>
             <button type="button" class="btn btn-warning">Editar</button>
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">Eliminar</button>
-            <!-- <a href="{% url 'presentacion-delete' presentacion.pk %}" class="btn btn-danger">Eliminar</a> -->
+           
 
           </td>
         </tr>
@@ -54,7 +54,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <form method="post" action="{% url 'presentacion-delete' presentacion.pk %}">
+        <form method="post" action="{% url 'imagenes:presentacion-delete'  presentacion.pk %}">
           {% csrf_token %}
           <input type="submit" class="btn btn-danger" value="Eliminar">
       </form>

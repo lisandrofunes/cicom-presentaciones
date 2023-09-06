@@ -16,6 +16,7 @@ urlpatterns = [
     path('presentacion-create/', views.CrearPresentacionView.as_view(), name='presentacion-create'),
     path('presentacion-vista/<str:titulo>', views.MostrarPresentacionView.as_view(), name='presentacion-vista'),
     path('presentacion-delete/<int:pk>', views.PresentacionDeleteView.as_view(), name='presentacion-delete'),
+    path('<int:pk>/delete', views.deleteArchivo, name='delete'),
 
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 # if settings.DEBUG:

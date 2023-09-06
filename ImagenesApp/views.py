@@ -110,6 +110,3 @@ def deleteArchivo(request,pk):
         
      return redirect ('imagenes:archivo-list')
         
-class EditarArchivo(UpdateView):
-    modelo=Archivo
-    
