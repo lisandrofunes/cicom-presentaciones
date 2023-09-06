@@ -7,6 +7,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+app_name='imagenes'
 urlpatterns = [ 
     #  path('', CargarArchivoView.as_view(), name='cargar_archivo'),
     path('archivo-create/', views.ArchivoCreate.as_view(), name='archivo-create'),

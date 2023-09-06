@@ -28,7 +28,7 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('cargar_archivo/', CargarArchivoView.as_view(), name='cargar_archivo'),
-    # path('', admin.site.urls),
+     path("", include("ImagenesApp.urls")),
     path("archivo/", include("ImagenesApp.urls")),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 

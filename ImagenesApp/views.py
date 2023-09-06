@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from .models import Archivo, DetallePresentacion, Presentacion
 from django.views import View
@@ -103,3 +103,13 @@ class MostrarPresentacionView(View):
         }
 
         return render(request, 'ImagenesApp/presentacion_vista.html', context)
+
+def deleteArchivo(request,pk):
+     archivo=get_object_or_404(Archivo,pk=pk)
+     archivo.delete()
+        
+     return redirect ('imagenes:archivo-list')
+        
+class EditarArchivo(UpdateView):
+    modelo=Archivo
+    

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+
+
 {% block content %}
 <div class="container" style="padding-top: 16px;">
     <h1>Lista de archivos</h1>
@@ -31,9 +33,10 @@
             {% endif %}
           </td>
           <td>
+            
             <button type="button" class="btn btn-dark">Ver imagen/video</button>
             <button type="button" class="btn btn-warning">Editar</button>
-            <button type="button" class="btn btn-danger">Eliminar</button>
+            <a href="#" onclick="eliminarArchivo({{archivo.id}})" type="button" class="btn btn-danger">Eliminar</a>
           </td>
         </tr>
         {% endfor %}
@@ -96,4 +99,24 @@
         margin-right: 5px; /* Espacio entre los círculos */
     }
 </style>
+<script>
+  function eliminarArchivo(id){
+    console.log(id)
+    Swal.fire({
+      "title":"¿Estas seguro ?",
+      "text": "esta accion no se puede deshacer",
+       "icon": 'warning',
+       "confirmButtonColor": '#3085d6',
+      "cancelButtonColor": '#d33',
+      "showCancelButton":true,
+      "cancelButtonText": "Cancelar",
+      "confirmButtonText":"Confirmar"
+    })
+    .then(function(result){
+      if(result.isConfirmed){
+        window.location.href= "/"+id+"/delete"
+      }
+    })
+  }
+</script>
 {% endblock %}
