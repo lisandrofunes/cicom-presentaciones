@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container mt-5" >
-    <form method="post" id="form" style="display: flex; flex-direction: column; gap: 18px; max-width: 500px; margin-inline: auto; padding-bottom: 18px;">
-        <h2>Crear Presentación</h2>
+<div class="container py-5" style="min-height: 100vh;">
+  <div class="card" style="width: 100%;">
+    <div class="card-body">
+        <h2 class="card-title">Nueva Presentación</h2>
+        <!-- <h2 class="card-title">{% if presentacion %}Editar Presentación{% else %}Nueva Presentación{% endif %}</h2> -->
+
+    <form method="post" id="form" style="display: flex; flex-direction: column; gap: 18px; ">
+        
         {% csrf_token %}
         <div class="form-group">
             <label for="titulo">Título:</label>
@@ -13,18 +18,20 @@
             <label for="tiempo">Tiempo:</label>
             <input type="number" class="form-control" id="tiempo" name="tiempo" required>
         </div>
+        <!-- <div class="form-group">
+          <label for="titulo">Título:</label>
+          <input type="text" class="form-control" id="titulo" name="titulo" required value="{% if presentacion %}{{ presentacion.titulo }}{% endif %}">
+      </div>
+      <div class="form-group">
+          <label for="tiempo">Tiempo:</label>
+          <input type="number" class="form-control" id="tiempo" name="tiempo" required value="{% if presentacion %}{{ presentacion.tiempo }}{% endif %}">
+      </div> -->
+      <!--  -->
         <div class="form-group">
 
-            
             <label for="archivos">Archivos:</label>
-
             <div multiple class="form-control" id="archivos" name="archivos[]" required>
-                <!-- {% for archivo in archivos %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="archivos[]" value="{{ archivo.id }}">
-                    <label class="form-check-label">{{ archivo.nombre }}</label>
-                </div>
-                {% endfor %} -->
+
                 <table class="table table-hover">
                     <thead>
                       <tr>
@@ -39,6 +46,7 @@
                         <td>
                           <div >
                             <input type="checkbox" class="form-check-input"  name="archivos[]" value="{{ archivo.id }}">
+                            <!-- {% if archivo in archivos_seleccionados %}checked{% endif %} -->
                           </div>
                         </td>
                         <td>{{ archivo.nombre }}</td>
@@ -53,8 +61,12 @@
                   </table>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Crear Presentación</button>
+        <button type="submit" class="btn btn-primary">Confirmar</button>
+        <!-- <button type="submit" class="btn btn-primary">{% if presentacion %}Guardar Cambios{% else %}Crear Presentación{% endif %}</button> -->
+           
     </form>
+  </div>
+</div>
 
 </div>
 {% endblock %}

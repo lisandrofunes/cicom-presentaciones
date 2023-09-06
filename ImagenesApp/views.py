@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from .models import Archivo, DetallePresentacion, Presentacion
-from django.views import View
+from django.views import View, generic
 from django.http import HttpResponse
-from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+
+# --- ARCHIVOS ---
 
 @login_required
 class CargarArchivoView(View):
@@ -23,15 +25,30 @@ class CargarArchivoView(View):
     def get(self, request):
         return render(request, 'cargar_archivo.html')
 
-
 @method_decorator(login_required, name='dispatch')
 class ArchivoCreate(CreateView):
     model = Archivo
     # permission_required = 'catalog.can_mark_returned'
     fields = '__all__'
     template_name =  'ImagenesApp/archivo_form.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('imagenes:archivo-list')
 
+
+@method_decorator(login_required, name='dispatch')
+class ArchivoListView(generic.ListView):
+    model = Archivo
+    paginate_by = 10
+
+@login_required
+def deleteArchivo(request,pk):
+     archivo=get_object_or_404(Archivo,pk=pk)
+     archivo.delete()
+        
+     return redirect ('imagenes:archivo-list')
+        
+
+
+# --- PRESENTACIONES ---
 
 @method_decorator(login_required, name='dispatch')
 class CrearPresentacionView(View):
@@ -54,43 +71,41 @@ class CrearPresentacionView(View):
 
         return HttpResponse("Presentación creada exitosamente")
 
+
+#-------------Chequear------------
+
 @method_decorator(login_required, name='dispatch')
-class PresentacionDeleteView(DeleteView):
+class PresentacionEditView(UpdateView):
     model = Presentacion
-    template_name = 'ImagenesApp/presentacion_delete.html'  
-    success_url = reverse_lazy('index')  
+    template_name = 'ImagenesApp/presentacion_edit.html'
+    fields = ['titulo', 'tiempo']
 
-def index(request):
-    return render(request, 'ImagenesApp/index.html')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['archivos_disponibles'] = Archivo.objects.exclude(detallepresentacion__presentacion=self.object)
+        return context
+
+    def form_valid(self, form):
+        # Guarda la presentación
+        self.object = form.save()
+
+        # Procesa los archivos seleccionados y los relaciona con la presentación
+        archivos_seleccionados = self.request.POST.getlist('archivos')
+        for archivo_id in archivos_seleccionados:
+            archivo = Archivo.objects.get(id=archivo_id)
+            # Crea una relación entre la presentación y el archivo
+            DetallePresentacion.objects.create(presentacion=self.object, archivo=archivo)
+
+        return redirect ('imagenes:presentacion-list')   
+# ------------------------------------
 
 
-
-# def crear_presentacion(request):
-#     if request.method == 'POST':
-#         titulo = request.POST.get('titulo')
-#         archivo_ids = request.POST.getlist('archivos')  # Obtener una lista de IDs de archivos seleccionados
-
-#         nueva_presentacion = Presentacion(titulo=titulo)
-#         nueva_presentacion.save()
-
-#         for index, archivo_id in enumerate(archivo_ids):
-#             archivo = Archivo.objects.get(pk=archivo_id)
-#             DetallePresentacion.objects.create(presentacion=nueva_presentacion, archivo=archivo, orden=index)
-
-    # Resto de tu vista...
-
-from django.views import generic
-
-@method_decorator(login_required, name='dispatch')
-class ArchivoListView(generic.ListView):
-    model = Archivo
-    paginate_by = 10
 
 @method_decorator(login_required, name='dispatch')
 class PresentacionListView(generic.ListView):
     model = Presentacion
  
-@method_decorator(login_required, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
 class MostrarPresentacionView(View):
     def get(self, request, titulo):
         try:
@@ -109,10 +124,12 @@ class MostrarPresentacionView(View):
 
         return render(request, 'ImagenesApp/presentacion_vista.html', context)
 
-@login_required
-def deleteArchivo(request,pk):
-     archivo=get_object_or_404(Archivo,pk=pk)
-     archivo.delete()
-        
-     return redirect ('imagenes:archivo-list')
-        
+    
+@method_decorator(login_required, name='dispatch')
+class PresentacionDeleteView(DeleteView):
+    model = Presentacion
+    template_name = 'ImagenesApp/presentacion_delete.html'  
+    success_url = reverse_lazy('index')  
+
+def index(request):
+    return render(request, 'ImagenesApp/index.html')

@@ -3,8 +3,11 @@
 
 
 {% block content %}
-<div class="container" style="padding-top: 16px;">
-    <h1>Lista de archivos</h1>
+<div class="container py-5" style="min-height: 100vh;">
+  <div class="card" style="width: 100%;">
+    <div class="card-body">
+        <h2 class="card-title">Lista de archivos</h2>
+    
 
     {% if archivo_list %}
 
@@ -75,6 +78,8 @@
 {% endif %}
     {% endif %}
   </div>
+</div>
+</div>
   <style>
     .page-links span.page-current {
         display: inline-block;

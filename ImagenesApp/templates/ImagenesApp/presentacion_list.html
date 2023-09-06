@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container" style="padding-top: 16px;">
-    <h1>Lista de presentaciones</h1>
+<div class="container py-5" style="min-height: 100vh;">
+  <div class="card" style="width: 100%;">
+    <div class="card-body">
+        <h2 class="card-title">Lista de Presentaciones</h2>
 
     {% if presentacion_list %}
     
@@ -20,11 +22,10 @@
           <td>{{ presentacion.titulo }}</td>
           <td>{{ presentacion.tiempo }}</td>
           <td>
-            <button type="button" class="btn btn-dark" onclick="copyLink('{{ presentacion.titulo }}')">Ver Presentacion</button>
-            <button type="button" class="btn btn-warning">Editar</button>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">Eliminar</button>
-           
-
+            <button type="button" class="btn btn-dark" onclick="copyLink('{{ presentacion.titulo }}')">Copiar URL</button>
+            <!-- <button type="button" class="btn btn-warning">Editar</button> -->
+            <a href="{% url 'imagenes:presentacion-edit' presentacion.pk %}" class="btn btn-warning">Editar</a>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar{{ presentacion.pk }}">Eliminar</button>
           </td>
         </tr>
         {% endfor %}
@@ -34,13 +35,15 @@
     {% else %}
       <p>There are no books in the library.</p>
     {% endif %}
+  </div>
+</div>
 </div>
 
 
 <!-- Modal de Confirmación de Eliminación -->
 {% for presentacion in presentacion_list %}
 
-<div class="modal fade" id="modalEliminar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="modalEliminar{{ presentacion.pk }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -53,7 +56,7 @@
         Estas por eliminar "{{ presentacion.titulo }}"
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         <form method="post" action="{% url 'imagenes:presentacion-delete'  presentacion.pk %}">
           {% csrf_token %}
           <input type="submit" class="btn btn-danger" value="Eliminar">
