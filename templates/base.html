@@ -17,6 +17,7 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">Inicio</a>
               </li>
+              {%if request.user.is_authenticated%}
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'imagenes:presentacion-create' %}">Nueva</a>
               </li>
@@ -27,7 +28,10 @@
                 <a class="nav-link" href="{% url 'imagenes:archivo-list' %}">Mostrar archivos</a>
               </li>
             </ul>
-            <a  href="{% url 'imagenes:login' %}" class="btn btn-secondary btn-lg" >Log in </a>
+            <a  href="{% url 'imagenes:logout' %}" class="btn btn-secondary btn-lg" >Cerra sesion </a>
+            {%else%}
+            <a  href="{% url 'imagenes:login' %}" class="btn btn-secondary btn-lg" >Iniciar sesion </a>
+            {%endif%}
         </div>
        
       </nav>
