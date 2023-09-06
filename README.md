@@ -1,8 +1,8 @@
 <h1 align="center"> Aplicacion de presentaciones </h1>
 
-## Instalacion
+## Instalacion 
 ***
-A little intro about the installation. 
+
 ```
 $ git clone https://github.com/lisandrofunes/cicom-presentaciones.git
 $ cd cicom/presentaciones
