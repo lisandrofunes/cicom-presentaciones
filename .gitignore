@@ -1,0 +1,3 @@
+# Archivos de base de datos de Django
+*.sqlite3
+*.db
