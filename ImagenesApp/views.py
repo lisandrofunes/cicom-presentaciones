@@ -4,8 +4,10 @@ from .models import Archivo, DetallePresentacion, Presentacion
 from django.views import View
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, DeleteView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
-
+@login_required
 class CargarArchivoView(View):
     def post(self, request):
         nombre = request.POST.get('nombre')
@@ -22,7 +24,7 @@ class CargarArchivoView(View):
         return render(request, 'cargar_archivo.html')
 
 
-
+@method_decorator(login_required, name='dispatch')
 class ArchivoCreate(CreateView):
     model = Archivo
     # permission_required = 'catalog.can_mark_returned'
@@ -31,7 +33,7 @@ class ArchivoCreate(CreateView):
     success_url = reverse_lazy('index')
 
 
-
+@method_decorator(login_required, name='dispatch')
 class CrearPresentacionView(View):
     def get(self, request):
         archivos = Archivo.objects.all()  # Obtener archivos disponibles para seleccionar
@@ -52,7 +54,7 @@ class CrearPresentacionView(View):
 
         return HttpResponse("Presentación creada exitosamente")
 
-
+@method_decorator(login_required, name='dispatch')
 class PresentacionDeleteView(DeleteView):
     model = Presentacion
     template_name = 'ImagenesApp/presentacion_delete.html'  
@@ -79,13 +81,16 @@ def index(request):
 
 from django.views import generic
 
+@method_decorator(login_required, name='dispatch')
 class ArchivoListView(generic.ListView):
     model = Archivo
     paginate_by = 10
-    
+
+@method_decorator(login_required, name='dispatch')
 class PresentacionListView(generic.ListView):
     model = Presentacion
  
+@method_decorator(login_required, name='dispatch')
 class MostrarPresentacionView(View):
     def get(self, request, titulo):
         try:
@@ -104,6 +109,7 @@ class MostrarPresentacionView(View):
 
         return render(request, 'ImagenesApp/presentacion_vista.html', context)
 
+@login_required
 def deleteArchivo(request,pk):
      archivo=get_object_or_404(Archivo,pk=pk)
      archivo.delete()

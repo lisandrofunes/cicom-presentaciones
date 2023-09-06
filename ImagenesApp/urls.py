@@ -20,6 +20,7 @@ urlpatterns = [
     path('presentacion-delete/<int:pk>', views.PresentacionDeleteView.as_view(), name='presentacion-delete'),
     path('<int:pk>/delete', views.deleteArchivo, name='delete'),
     path('login/', auth_views.LoginView.as_view(template_name='ImagenesApp/login.html',authentication_form=LoginForm),name='login'),
+    path("logout/", LogoutView.as_view(), name="logout"),
 
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 # if settings.DEBUG:
