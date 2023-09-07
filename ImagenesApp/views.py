@@ -133,3 +133,4 @@ class PresentacionDeleteView(DeleteView):
 
 def index(request):
     return render(request, 'ImagenesApp/index.html')
+
