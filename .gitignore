@@ -1,3 +1,5 @@
 # Archivos de base de datos de Django
 *.sqlite3
 *.db
+# Ignorar entorno virtual de Python
+/env/
