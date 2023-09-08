@@ -36,8 +36,9 @@
             {% endif %}
           </td>
           <td>
-            
-            <button type="button" class="btn btn-dark">Ver imagen/video</button>
+           
+            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalVer{{ archivo.pk }}">Ver imagen</button>
+
             <a href="{% url 'imagenes:editar_archivo' archivo.pk %}" type="button" class="btn btn-warning">Editar</a>
             <a href="#" onclick="eliminarArchivo({{archivo.id}})" type="button" class="btn btn-danger">Eliminar</a>
           </td>
@@ -80,6 +81,28 @@
   </div>
 </div>
 </div>
+{% for archivo in archivo_list %}
+
+<div class="modal fade" id="modalVer{{ archivo.pk }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">
+          Ver Archivo
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="display: flex; justify-content: center; align-items: center;">
+        <img src="{{ archivo.archivo.url }}" style="width: 200px; height: 200px;"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
   <style>
     .page-links span.page-current {
         display: inline-block;
