@@ -1,11 +1,14 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from .models import Archivo, DetallePresentacion, Presentacion
 from django.views import View, generic
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from .forms import EditarArchivos
+from django.http import HttpResponseRedirect
+
 
 # --- ARCHIVOS ---
 
@@ -45,9 +48,15 @@ def deleteArchivo(request,pk):
      archivo.delete()
         
      return redirect ('imagenes:archivo-list')
+
+
+@method_decorator(login_required, name='dispatch') 
+class EditarArchivo(UpdateView):
+    model = Archivo
+    form_class = EditarArchivos
+    template_name = 'ImagenesApp/editar_archivo.html'  
+    success_url = reverse_lazy('imagen:archivo-list')
         
-
-
 # --- PRESENTACIONES ---
 
 @method_decorator(login_required, name='dispatch')
