@@ -13,10 +13,11 @@ app_name='imagenes'
 urlpatterns = [ 
     #  path('', CargarArchivoView.as_view(), name='cargar_archivo'),
     path('', views.PresentacionListView.as_view(), name='index'),
-
+    path('editar-archivo/<int:pk>', views.EditarArchivo.as_view(), name='editar_archivo'),
     path('archivo-create/', views.ArchivoCreate.as_view(), name='archivo-create'),
     path('archivos/', views.ArchivoListView.as_view(), name='archivo-list'),
     path('<int:pk>/delete', views.deleteArchivo, name='delete'),
+    
     
     path('presentaciones/', views.PresentacionListView.as_view(), name='presentacion-list'),
     path('presentacion-create/', views.CrearPresentacionView.as_view(), name='presentacion-create'),

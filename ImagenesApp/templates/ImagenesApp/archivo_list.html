@@ -38,7 +38,7 @@
           <td>
             
             <button type="button" class="btn btn-dark">Ver imagen/video</button>
-            <button type="button" class="btn btn-warning">Editar</button>
+            <a href="{% url 'imagenes:editar_archivo' archivo.pk %}" type="button" class="btn btn-warning">Editar</a>
             <a href="#" onclick="eliminarArchivo({{archivo.id}})" type="button" class="btn btn-danger">Eliminar</a>
           </td>
         </tr>
