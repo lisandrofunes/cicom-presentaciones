@@ -2,12 +2,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy,reverse
 from .models import Archivo, DetallePresentacion, Presentacion
 from django.views import View, generic
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .forms import EditarArchivos
 from django.http import HttpResponseRedirect
+from django.contrib import messages
+from urllib.parse import quote_plus
+
+
 
 
 # --- ARCHIVOS ---
@@ -59,8 +63,30 @@ class EditarArchivo(UpdateView):
         
 # --- PRESENTACIONES ---
 
+# @method_decorator(login_required, name='dispatch')
+# class CrearPresentacionView(View):
+#     def get(self, request):
+#         archivos = Archivo.objects.all()  # Obtener archivos disponibles para seleccionar
+#         return render(request, 'ImagenesApp/presentacion_form.html', {'archivos': archivos})
+
+#     def post(self, request):
+#         titulo = request.POST.get('titulo')
+#         tiempo = request.POST.get('tiempo')
+#         archivos_seleccionados = request.POST.getlist('archivos[]')
+
+#         nueva_presentacion = Presentacion(titulo=titulo, tiempo=tiempo)
+#         nueva_presentacion.save()
+
+#         for i, archivo_id in enumerate(archivos_seleccionados, start=1):
+#             archivo = Archivo.objects.get(id=archivo_id)
+#             detalle = DetallePresentacion(presentacion=nueva_presentacion, archivo=archivo, orden=i)
+#             detalle.save()
+
+#         success_url = reverse_lazy('imagenes:archivo-list')
 @method_decorator(login_required, name='dispatch')
 class CrearPresentacionView(View):
+    success_url = reverse_lazy('imagenes:presentacion-list')
+
     def get(self, request):
         archivos = Archivo.objects.all()  # Obtener archivos disponibles para seleccionar
         return render(request, 'ImagenesApp/presentacion_form.html', {'archivos': archivos})
@@ -70,6 +96,22 @@ class CrearPresentacionView(View):
         tiempo = request.POST.get('tiempo')
         archivos_seleccionados = request.POST.getlist('archivos[]')
 
+        # Validar que el título no contenga espacios y reemplazarlos con '_'
+        titulo = titulo.replace(' ', '_')
+        
+        # Verificar si el título ya existe en las presentaciones
+        existing_presentations = Presentacion.objects.filter(titulo=titulo)
+
+        if existing_presentations.exists():
+            # Si el título ya existe, genera un nuevo nombre con un número incremental
+            contador = 1
+            while True:
+                nuevo_titulo = f"{titulo}_{contador}"
+                if not Presentacion.objects.filter(titulo=nuevo_titulo).exists():
+                    titulo = nuevo_titulo
+                    break
+                contador += 1
+
         nueva_presentacion = Presentacion(titulo=titulo, tiempo=tiempo)
         nueva_presentacion.save()
 
@@ -78,7 +120,29 @@ class CrearPresentacionView(View):
             detalle = DetallePresentacion(presentacion=nueva_presentacion, archivo=archivo, orden=i)
             detalle.save()
 
-        return HttpResponse("Presentación creada exitosamente")
+        # Agregar un mensaje de éxito
+        messages.success(request, f'Se creó la presentación exitosamente.')
+        
+        # Redirigir a la página de presentaciones con el indicador para mostrar el modal
+        return redirect(self.get_success_url())
+    
+        
+
+    def get_success_url(self):
+        # Agregar el indicador "success" a la URL
+        return f"{self.success_url}?success=1"
+        # return f"{self.success_url}?success=1&titulo={quote_plus(self.titulo)}"
+
+        
+    # def get_success_url(self):
+    #         # Recupera el título de la sesión
+    #         new_presentation_title = self.request.session.get('new_presentation_title', None)
+
+    #         # Si se encontró un título en la sesión, agrega el parámetro "title" a la URL de redirección
+    #         if new_presentation_title:
+    #             return f"{self.success_url}?success=1&title={new_presentation_title}"
+    #         else:
+    #             return self.success_url
 
 
 #-------------Chequear------------
@@ -138,7 +202,7 @@ class MostrarPresentacionView(View):
 class PresentacionDeleteView(DeleteView):
     model = Presentacion
     template_name = 'ImagenesApp/presentacion_delete.html'  
-    success_url = reverse_lazy('index')  
+    success_url = reverse_lazy('imagenes:index')  
 
 def index(request):
     return render(request, 'ImagenesApp/index.html')

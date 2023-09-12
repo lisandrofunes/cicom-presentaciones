@@ -24,7 +24,7 @@ urlpatterns = [
     path('presentacion-edit/<int:pk>/', views.PresentacionEditView.as_view(), name='presentacion-edit'),
     path('presentacion-vista/<str:titulo>', views.MostrarPresentacionView.as_view(), name='presentacion-vista'),
     path('presentacion-delete/<int:pk>', views.PresentacionDeleteView.as_view(), name='presentacion-delete'),
-    
+        
     path('login/', auth_views.LoginView.as_view(template_name='ImagenesApp/login.html',authentication_form=LoginForm),name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
 
