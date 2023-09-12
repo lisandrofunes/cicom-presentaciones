@@ -122,9 +122,9 @@ class CrearPresentacionView(View):
 
         # Agregar un mensaje de éxito
         messages.success(request, f'Se creó la presentación exitosamente.')
-        
+        request.session['titulo'] = titulo
         # Redirigir a la página de presentaciones con el indicador para mostrar el modal
-        return redirect(self.get_success_url())
+        return redirect(self.get_success_url(),)
     
         
 
