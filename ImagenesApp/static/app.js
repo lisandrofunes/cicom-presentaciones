@@ -6,6 +6,7 @@ class MediaFile {
     this.duration = fileType(url) === 'video' ? undefined : duration
     this.type = fileType(url)
     this.index = index
+
   }
 
   setDuration(duration) {
@@ -52,7 +53,7 @@ function createHTMLNode({ type, src }) {
 
   if (fileType === 'video') {
     node.setAttribute('src', src)
-    node.setAttribute('controls', true)
+    node.setAttribute('controls', false)
   }
 
   wrapper.appendChild(node)
@@ -84,8 +85,6 @@ function nextSlide(files, file) {
     file.node.dataset.state = 'visible'
     if(file.type === 'video'){
       file.getFileTagChildren().play()
-        .then(() => console.log('play'))
-        .catch(() => console.log('error'))
     }
   }, 500)
 }
