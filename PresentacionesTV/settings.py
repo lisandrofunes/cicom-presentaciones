@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'PresentacionesTV.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.postgresql',
-        'NAME': 'presentacionesTV',
+        'NAME': 'presentacionestv',
         'USER': 'cicom',
         'PASSWORD': 'Opt51qsd',
         'HOST': 'localhost',

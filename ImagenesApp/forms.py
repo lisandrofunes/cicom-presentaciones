@@ -22,5 +22,5 @@ class EditarArchivos(forms.ModelForm):
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'archivo': forms.FileInput(attrs={'class': 'form-control-file'}),
-            'es_video': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'es_video': forms.CheckboxInput(attrs={'class': 'form-check-input pl-5'}),
         }

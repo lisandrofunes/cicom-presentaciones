@@ -16,7 +16,13 @@
                 <label for="archivo">Archivo:</label>
                 <input class="form-control" type="file" name="archivo"  required>
             </div>
+
             <br>
+            <div class="form-check form-check-inline" >
+                <label class="form-check-label" for="{{ form.es_video.id_for_label }}" >Es video</label>  
+                {{ form.es_video }}
+                 
+                </div>
             <button type="submit" class="btn btn-dark">Cargar archivo</button>
         </form>
     </div>

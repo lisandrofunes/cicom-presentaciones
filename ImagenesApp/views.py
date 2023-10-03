@@ -59,7 +59,8 @@ class EditarArchivo(UpdateView):
     model = Archivo
     form_class = EditarArchivos
     template_name = 'ImagenesApp/editar_archivo.html'  
-    success_url = reverse_lazy('imagen:archivo-list')
+    print('aaaaa')
+    success_url = reverse_lazy('imagenes:archivo-list')
         
 # --- PRESENTACIONES ---
 
