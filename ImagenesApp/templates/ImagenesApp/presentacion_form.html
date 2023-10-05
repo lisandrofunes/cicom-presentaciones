@@ -1,73 +1,130 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
+
+<head>
+  <script src="{% static 'presentacionForm.js' %}"></script>
+  <link href="{% static 'presentacionForm.css' %}" type="text/css" rel="stylesheet" />
+</head>
+
 
 <div class="container py-5" style="min-height: 100vh;">
   <div class="card" style="width: 100%;">
     <div class="card-body">
-        <h2 class="card-title">Nueva Presentación</h2>
-        <!-- <h2 class="card-title">{% if presentacion %}Editar Presentación{% else %}Nueva Presentación{% endif %}</h2> -->
+      <h2 class="card-title">Nueva Presentación</h2>
 
-    <form method="post" id="form" style="display: flex; flex-direction: column; gap: 18px; ">
-        
+      <form method="post" id="form" style="display: flex; flex-direction: column; gap: 18px; ">
+
         {% csrf_token %}
         <div class="form-group">
-            <label for="titulo">Título:</label>
-            <input type="text" class="form-control" id="titulo" name="titulo" required>
-        </div>
-        <div class="form-group">
-            <label for="tiempo">Tiempo:</label>
-            <input type="number" class="form-control" id="tiempo" name="tiempo" required>
-        </div>
-        <!-- <div class="form-group">
           <label for="titulo">Título:</label>
-          <input type="text" class="form-control" id="titulo" name="titulo" required value="{% if presentacion %}{{ presentacion.titulo }}{% endif %}">
-      </div>
-      <div class="form-group">
-          <label for="tiempo">Tiempo:</label>
-          <input type="number" class="form-control" id="tiempo" name="tiempo" required value="{% if presentacion %}{{ presentacion.tiempo }}{% endif %}">
-      </div> -->
-      <!--  -->
+          <input type="text" class="form-control" id="titulo" name="titulo" required>
+        </div>
         <div class="form-group">
+          <label for="tiempo">Tiempo:</label>
+          <input type="number" class="form-control" id="tiempo" name="tiempo" required>
+        </div>
+        <button type="button" class="btn btn-dark" id="select-file">Ver archivos</button>
+        <div class="form-group">
+          <label for="archivos-lista">Archivos seleccionados:</label>
+          <ol id="files-box">
 
-            <label for="archivos">Archivos:</label>
-            <div multiple class="form-control" id="archivos" name="archivos[]" required>
-
-                <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th class="col-1" scope="col"></th>
-                        <th class="col-3" scope="col">Nombre</th>
-                        <th class="col-2" scope="col">Imagen</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for archivo in archivos %}
-                      <tr class="col-auto">
-                        <td>
-                          <div >
-                            <input type="checkbox" class="form-check-input"  name="archivos[]" value="{{ archivo.id }}">
-                            <!-- {% if archivo in archivos_seleccionados %}checked{% endif %} -->
-                          </div>
-                        </td>
-                        <td>{{ archivo.nombre }}</td>
-                        <td><img src="{{ archivo.archivo.url }}" style="width: 60px; height: 60px;" style="object-fit: cover;"/> 
-                          {% comment %} <a href="{{ archivo.archivo.url }}" target="_blank">
-                              <button>Abrir Imagen</button>
-                          </a> {% endcomment %}
-                        </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-            </div>
+          </ol>
         </div>
         <button type="submit" class="btn btn-primary">Confirmar</button>
-        <!-- <button type="submit" class="btn btn-primary">{% if presentacion %}Guardar Cambios{% else %}Crear Presentación{% endif %}</button> -->
-           
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 
+  <div class="modal-overlay" data-state="close">
+    <div class="modal_">
+      <h2>Archivos</h2>
+      <div class="files-gallery">
+        {% for archivo in archivos %}
+        <div class="file-card" data-id="{{ archivo.id }}" data-selected="false">
+          {% if archivo.es_video %}
+          <video src="{{ archivo.archivo.url }}" class="file-image" controls="false" autoplay="false"
+            controlslist="nodownload noplaybackrate"></video>
+          {% else %}
+          <img src="{{ archivo.archivo.url }}" alt="" class="file-image">
+          {% endif %}
+          <footer class="card-footer_">
+            <h3>{{ archivo.nombre }}</h3>
+            <p>ID {{ archivo.id }}</p>
+          </footer>
+        </div>
+        {% endfor %}
+      </div>
+      <button type="button" class="btn btn-dark" id="confirmar">Confirmar</button>
+    </div>
+  </div>
+
+  <script>
+    const archivosString = `{
+      {% for archivo in archivos %}
+      "{{ archivo.id }}":{
+        "id": "{{ archivo.id }}",
+        "nombre": "{{ archivo.nombre }}",
+        "url": "{{ archivo.archivo.url }}",
+        "type": "{{ archivo.tipo }}",
+        "duracion": "{{ archivo.duracion }}",
+        "video": "{{ archivo.es_video }}" 
+      },
+      {% endfor %}
+    }`
+
+    const archivos = getArchivosFromString(archivosString)
+    const filesList = document.getElementById('archivos-lista')
+    const filesBox = document.getElementById('files-box')
+    const selectFileButton = document.getElementById('select-file')
+    const fileCards = document.querySelectorAll('.file-card')
+    const modal = document.querySelector('.modal-overlay')
+    const gallery = document.querySelector('.files-gallery')
+    const modalConfirmButton = document.getElementById('confirmar')
+    const fileBox = document.getElementById('files-box')
+    const fileController = new FilesController(archivos, gallery)
+    const form = document.getElementById('form')
+
+    form.addEventListener('submit', (e) => {
+
+    })
+
+    modalConfirmButton.addEventListener('click', () => {
+      console.log('enter')
+      modal.dataset.state = 'close'
+      const selectedFiles = fileController.getSelectedFiles()
+      selectedFiles.forEach((file, index) => {
+        const selectedFileCard = document.createElement('li')
+        selectedFileCard.classList.add('selectedFile')
+        selectedFileCard.dataset.id = file.id
+        selectedFileCard.dataset.orden = index + 1
+        selectedFileCard.name = 'archivos[]'
+        selectedFileCard.value = file.id
+
+        const innerHTML = `
+          <input type="hidden" name="archivos[]" value="${file.id}">
+          <h3>${file.nombre}</h3>
+          <p>ID ${file.id}</p>
+        `
+
+        selectedFileCard.innerHTML = innerHTML
+        fileBox.appendChild(selectedFileCard)
+      })
+    })
+
+
+    fileCards.forEach(fileCard => {
+      fileCard.addEventListener('click', () => {
+        const id = fileCard.dataset.id
+        fileController.toggleCard(fileCard, id)
+      })
+    })
+
+    selectFileButton.addEventListener('click', () => {
+      modal.dataset.state = 'open'
+    })
+
+  </script>
 </div>
 
 {% endblock %}
