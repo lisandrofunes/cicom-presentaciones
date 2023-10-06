@@ -3,6 +3,9 @@
   padding: 20px 10px;
   background-color: #f4f4f4;
   border-radius: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 #select-file {
@@ -13,9 +16,19 @@
   width: fit-content;
   padding: 10px;
   display: flex;
+  flex-direction: column;
   background-color: white;
   border-radius: 6px;
   margin-bottom: 10px;
+  transition: all 200ms ease-out;
+  position: relative;
+  width: 160px;
+  overflow-x: hidden;
+}
+
+.selectedFile:hover {
+  transform: scale(1.005);
+  box-shadow: 0 5px 8px rgba(0, 0, 0, .1);
 }
 
 .modal-overlay {
@@ -31,11 +44,11 @@
 }
 
 .modal-overlay[data-state="close"] {
-  visibility: hidden;
+  display: none;
 }
 
 .modal-overlay[data-set="open"] {
-  visibility: visible;
+  display: flex;
 }
 
 .modal_ {
@@ -48,6 +61,19 @@
   max-height: 800px;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  font-size: 18px;
 }
 
 .modal_>h2 {
@@ -92,17 +118,17 @@
   position: absolute;
   border-radius: 9999px;
   font-size: 14px;
-  font-weight: 900;
+  font-weight: 800;
   margin-top: 3px;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(11, 157, 11);
+  background-color: white;
   top: 10px;
-  right: 10px;
-  color: white;
+  right: 8px;
+  color: #1d1d1d;
   animation: 200ms show ease-out;
 }
 
@@ -153,4 +179,54 @@
   width: fit-content;
   margin-top: 20px;
   margin-inline: auto;
+}
+
+.selectedFile-title {
+  margin: 0;
+  max-width: 80%;
+  font-size: 16px;
+  display: inline-block;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.selectedFile-body>img,
+.selectedFile-body>video {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.selectedFile-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.selectedFile-index {
+  color: #3f3f3f;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.selectedFile-delete {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+}
+
+.selectedFile-titleWrapper {
+  display: flex;
+  gap: 2px;
+  align-items: end;
 }

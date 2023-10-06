@@ -27,7 +27,7 @@
         <button type="button" class="btn btn-dark" id="select-file">Ver archivos</button>
         <div class="form-group">
           <label for="archivos-lista">Archivos seleccionados:</label>
-          <ol id="files-box">
+          <ol id="files-box" type="1">
 
           </ol>
         </div>
@@ -39,21 +39,10 @@
   <div class="modal-overlay" data-state="close">
     <div class="modal_">
       <h2>Archivos</h2>
+      <button type="button" class="modal-close">
+        ✖︎
+      </button>
       <div class="files-gallery">
-        {% for archivo in archivos %}
-        <div class="file-card" data-id="{{ archivo.id }}" data-selected="false">
-          {% if archivo.es_video %}
-          <video src="{{ archivo.archivo.url }}" class="file-image" controls="false" autoplay="false"
-            controlslist="nodownload noplaybackrate"></video>
-          {% else %}
-          <img src="{{ archivo.archivo.url }}" alt="" class="file-image">
-          {% endif %}
-          <footer class="card-footer_">
-            <h3>{{ archivo.nombre }}</h3>
-            <p>ID {{ archivo.id }}</p>
-          </footer>
-        </div>
-        {% endfor %}
       </div>
       <button type="button" class="btn btn-dark" id="confirmar">Confirmar</button>
     </div>
@@ -78,46 +67,51 @@
     const filesBox = document.getElementById('files-box')
     const selectFileButton = document.getElementById('select-file')
     const fileCards = document.querySelectorAll('.file-card')
-    const modal = document.querySelector('.modal-overlay')
+    const modalOverlay = document.querySelector('.modal-overlay')
+    const modal = document.querySelector('.modal_')
     const gallery = document.querySelector('.files-gallery')
     const modalConfirmButton = document.getElementById('confirmar')
     const fileBox = document.getElementById('files-box')
-    const fileController = new FilesController(archivos, gallery)
     const form = document.getElementById('form')
+    const deleteSelectedFileButton = document.querySelectorAll('.selectedFile-delete')
+    const modalCloseButton = document.querySelector('.modal-close')
+
+    const fileController = new FilesController(archivos, gallery)
+    fileController.render()
 
     modalConfirmButton.addEventListener('click', () => {
-      console.log('enter')
-      modal.dataset.state = 'close'
+      modalOverlay.dataset.state = 'close'
       const selectedFiles = fileController.getSelectedFiles()
-      selectedFiles.forEach((file, index) => {
-        const selectedFileCard = document.createElement('li')
-        selectedFileCard.classList.add('selectedFile')
-        selectedFileCard.dataset.id = file.id
-        selectedFileCard.dataset.orden = index + 1
-        selectedFileCard.name = 'archivos[]'
-        selectedFileCard.value = file.id
+      renderSelectedFiles(fileController, fileBox)
+    })
 
-        const innerHTML = `
-          <input type="hidden" name="archivos[]" value="${file.id}">
-          <h3>${file.nombre}</h3>
-          <p>ID ${file.id}</p>
-        `
-
-        selectedFileCard.innerHTML = innerHTML
-        fileBox.appendChild(selectedFileCard)
-      })
+    modal.addEventListener('click', (e) => {
+      e.stopPropagation()
     })
 
 
     fileCards.forEach(fileCard => {
-      fileCard.addEventListener('click', () => {
+      fileCard.addEventListener('click', (e) => {
+        e.preventDefault()
         const id = fileCard.dataset.id
         fileController.toggleCard(fileCard, id)
       })
     })
 
-    selectFileButton.addEventListener('click', () => {
-      modal.dataset.state = 'open'
+    modalCloseButton.addEventListener('click', () => {
+      modalOverlay.dataset.state = 'close'
+    })
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-overlay')) {
+        modalOverlay.dataset.state = 'close'
+      }
+      e.stopPropagation()
+    })
+
+    selectFileButton.addEventListener('click', (e) => {
+      fileController.updateCards()
+      modalOverlay.dataset.state = 'open'
     })
 
   </script>
